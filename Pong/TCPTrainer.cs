@@ -38,9 +38,9 @@ namespace Pong {
                 ball.EffectiveSpeed,
                 playerOne.Position.Y,
                 playerTwo.Position.Y,
-                playerOne.Velocity.Y < -0.01 ? 1 : 0,
-                playerOne.Velocity.Y > 0.01 ? 1 : 0,
-                Math.Abs(playerOne.Velocity.Y) < 0.01 ? 1 : 0);
+                playerTwo.Velocity.Y < -0.01 ? 1 : 0,
+                playerTwo.Velocity.Y > 0.01 ? 1 : 0,
+                Math.Abs(playerTwo.Velocity.Y) < 0.01 ? 1 : 0);
         }
 
         public void End() {

@@ -59,7 +59,7 @@ namespace Pong {
             PlayerOneScore = 0;
             PlayerTwoScore = 0;
 
-            IBatController playerTwoController = new PlayerController(Keyboard.Key.W, Keyboard.Key.S);
+            IBatController playerTwoController = new PlayerController(Keyboard.Key.Up, Keyboard.Key.Down);
 
             if (AI) {
                 playerTwoController = new AiController(this);
@@ -73,7 +73,7 @@ namespace Pong {
                     speed: BallSpeed),
                 new Bat(
                     game: this,
-                    controller: new PlayerController(Keyboard.Key.Up, Keyboard.Key.Down),
+                    controller: new PlayerController(Keyboard.Key.W, Keyboard.Key.S),
                     position: new PVector2F(10 - BarWidth, height / 2 - BarHeight / 2),
                     size: new PVector2F(BarWidth, BarHeight),
                     speed: BatSpeed),
@@ -86,7 +86,7 @@ namespace Pong {
             };
 
             _deltaClock.Restart();
-            _window.SetFramerateLimit(200);
+            _window.SetFramerateLimit(30);
 
             while (!closed) {
                 _window.DispatchEvents();

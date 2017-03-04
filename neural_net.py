@@ -20,6 +20,7 @@ class Net:
         self.init_propagate_step()
 
     def weights_from_file(self, file):
+        self.sess = tf.Session()
         saver = tf.train.Saver()
         saver.restore(self.sess, file)
 
@@ -35,6 +36,8 @@ class Net:
     def init_propagate_step(self):
         self.input = tf.placeholder(tf.float32, [None, self.nr_of_inputs])
         self.output = tf.placeholder(tf.float32, [None, self.nr_of_outputs])
+
+        self.input = tf.nn.l2_normalize(self.input, 1)
 
         self.actual_out = self.input
 
