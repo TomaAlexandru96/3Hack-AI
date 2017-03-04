@@ -1,15 +1,19 @@
-﻿using SFML.Graphics;
+﻿using System.Collections.Generic;
+using SFML.Graphics;
 using SFML.Window;
 
 namespace Pong {
     public class Game {
-        private SFML.Window.Window window;
+        private Window _window;
+        private List<IEntity> _entities;
 
         public void Start() {
-            window = new RenderWindow(new VideoMode(1200, 800), "Pong");
+            _window = new RenderWindow(new VideoMode(1200, 800), "Pong");
+            _entities = new List<IEntity>();
 
             while (true) {
-                
+                _entities.ForEach(x => x.Update());
+                _entities.ForEach(x => x.Render());
             }
         }
 

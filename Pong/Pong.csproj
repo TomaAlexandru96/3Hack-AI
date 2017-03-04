@@ -84,7 +84,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AIController.cs" />
+    <Compile Include="Ball.cs" />
+    <Compile Include="Bat.cs" />
+    <Compile Include="Collideable.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="IBatController.cs" />
+    <Compile Include="IEntity.cs" />
+    <Compile Include="PlayerController.cs" />
+    <Compile Include="Vector2D.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
