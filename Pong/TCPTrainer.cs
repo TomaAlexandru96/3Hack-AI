@@ -17,7 +17,7 @@ namespace Pong {
                 _client.Connect("localhost", 43437);
                 var networkStream = _client.GetStream();
                 _clientWriter = new StreamWriter(networkStream);
-                _clientWriter.Write("TRAIN");
+                _clientWriter.Write("TRIN");
             } catch (Exception) {
                 Console.WriteLine("[ERROR] Failed to connect to TCP AI training service");
             }
@@ -30,7 +30,7 @@ namespace Pong {
             var playerTwo = _game.GetEntities<Bat>()[1];
             var ball = _game.GetEntities<Ball>()[0];
 
-            _clientWriter.Write("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+            _clientWriter.Write("{0} {1} {2} {3} {4} {5} {6} {7} {8} {9},",
                 ball.Position.X,
                 ball.Position.Y,
                 ball.Velocity.X,
@@ -41,6 +41,12 @@ namespace Pong {
                 playerOne.Velocity.Y < -0.01 ? 1 : 0,
                 playerOne.Velocity.Y > 0.01 ? 1 : 0,
                 Math.Abs(playerOne.Velocity.Y) < 0.01 ? 1 : 0);
+        }
+
+        public void End() {
+            Console.WriteLine("Ending the game");
+            _clientWriter.Write("END");
+            _clientWriter.Close();
         }
     }
 }

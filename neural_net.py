@@ -54,7 +54,7 @@ class Net:
         for i in range(0, len(training_set), self.batch_size):
             mat_in = []
             mat_out = []
-            for batch in range(i, i+self.batch_size):
+            for batch in range(i, min(len(training_set), i+self.batch_size)):
                 tokens = [float(x) for x in training_set[batch].split()]
                 mat_in.append(tokens[:self.nr_of_inputs])
                 mat_out.append(tokens[self.nr_of_inputs:])

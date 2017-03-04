@@ -38,6 +38,7 @@ namespace Pong {
         private const int BallRadius = 5;
         private const int BallSpeed = 160;
         private const int BatSpeed = 160;
+        private readonly bool AI = true;
         private readonly Text _playerOneText = new Text();
         private readonly Text _playerTwoText = new Text();
         private readonly Clock _deltaClock;
@@ -47,7 +48,7 @@ namespace Pong {
 
         public Game() {
             _deltaClock = new Clock();
-            _trainerClient = new TcpTrainer(this);
+            if (!AI) _trainerClient = new TcpTrainer(this);
         }
 
         public void Start() {
@@ -57,6 +58,12 @@ namespace Pong {
             _window.Closed += (a, b) => closed = true;
             PlayerOneScore = 0;
             PlayerTwoScore = 0;
+
+            IBatController playerTwoController = new PlayerController(Keyboard.Key.W, Keyboard.Key.S);
+
+            if (AI) {
+                playerTwoController = new AiController(this);
+            }
 
             _entities = new List<IEntity> {
                 new Ball(
@@ -72,7 +79,7 @@ namespace Pong {
                     speed: BatSpeed),
                 new Bat(
                     game: this,
-                    controller: new PlayerController(Keyboard.Key.W, Keyboard.Key.S),
+                    controller: playerTwoController,
                     position: new PVector2F(width - 10, height / 2 - BarHeight / 2),
                     size: new PVector2F(BarWidth, BarHeight),
                     speed: BatSpeed)
@@ -87,12 +94,14 @@ namespace Pong {
                 float delta = _deltaClock.Restart().AsSeconds();
                 _entities.ForEach(x => x.Update(delta));
 
-                _trainerClient.Update();
+                if (!AI) _trainerClient.Update();
 
                 _window.Clear();
                 _entities.ForEach(x => x.Render(_window));
                 _window.Display();
             }
+
+            if (!AI) _trainerClient.End();
         }
 
         public List<T> GetEntities<T>() {
