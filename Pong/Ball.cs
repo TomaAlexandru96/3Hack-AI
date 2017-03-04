@@ -1,22 +1,23 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 
+#pragma warning disable 169
+
 namespace Pong {
     public class Ball : ICollideable, IEntity {
-        private IBatController _controller;
         private Vector2f _position;
         private Vector2f _size;
         private Image image;
         private Vector2f velocity;
         private float speed;
         private Game _game;
+        private readonly CircleShape _shape;
         public Bat RecentlyCollided { get; set; }
 
-        public Ball(IBatController controller, Vector2f position, Vector2f size, Texture texture, Game game) {
-            _controller = controller;
+        public Ball(Vector2f position, Vector2f size, Game game) {
             _position = position;
+            _shape = new CircleShape(_size.X) {FillColor = Color.White};
             _size = size;
-            Sprite bat = new Sprite(texture);
             _game = game;
         }
 
@@ -36,13 +37,11 @@ namespace Pong {
             throw new System.NotImplementedException();
         }
 
-        public void Update() {
-            throw new System.NotImplementedException();
-        }
+        public void Update() { }
 
-        public void Render() {
-            throw new System.NotImplementedException();
+        public void Render(RenderTarget target) {
+            _shape.Position = _position;
+            target.Draw(_shape);
         }
-
     }
 }

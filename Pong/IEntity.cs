@@ -1,6 +1,8 @@
-﻿namespace Pong {
+﻿using SFML.Graphics;
+
+namespace Pong {
     public interface IEntity {
         void Update();
-        void Render();
+        void Render(RenderTarget target);
     }
 }
