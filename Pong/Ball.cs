@@ -7,6 +7,11 @@ using SFML.Window;
 namespace Pong {
     public class Ball : ICollideable, IEntity {
         public Bat RecentlyCollided { get; set; }
+
+        public float EffectiveSpeed {
+            get { return _speed * (1 + Math.Abs(Velocity.Y)); }
+        }
+
         public PVector2F Position;
         public PVector2F Velocity = new PVector2F(1, 0);
         public readonly int Radius;
@@ -31,9 +36,8 @@ namespace Pong {
         }
 
         public void MakeMove(float delta) {
-            var effectiveSpeed = _speed * (1 + Math.Abs(Velocity.Y));
-            Position = new PVector2F(Position.X + (effectiveSpeed * Velocity.X * delta),
-                Position.Y + (effectiveSpeed * Velocity.Y * delta));
+            Position = new PVector2F(Position.X + (EffectiveSpeed * Velocity.X * delta),
+                Position.Y + (EffectiveSpeed * Velocity.Y * delta));
         }
 
         public void ChangeVelocityVertical() {

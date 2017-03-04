@@ -44,6 +44,7 @@ namespace Pong {
         private readonly Text _playerOneText = new Text();
         private readonly Text _playerTwoText = new Text();
         private readonly Clock _deltaClock;
+        private readonly TcpTrainer _trainerClient;
         private int _playerOneScore;
         private int _playerTwoScore;
 
@@ -51,6 +52,7 @@ namespace Pong {
 
         public Game() {
             _deltaClock = new Clock();
+            _trainerClient = new TcpTrainer(this);
         }
 
         public void Start() {
@@ -96,6 +98,10 @@ namespace Pong {
                 float delta = _deltaClock.Restart().AsSeconds();
                 //_entities.ForEach(x => x.Update(delta));
                 state.update(delta);
+
+
+                _trainerClient.Update();
+
                 _window.Clear();
                 state.Render(_window);
                 //_entities.ForEach(x => x.Render(_window));
@@ -122,7 +128,7 @@ namespace Pong {
         public void AddAiPlayer() {
             Bat player = new Bat(
                 game: this,
-                controller: new AiController(),
+                controller: new AiController(this),
                 position: new PVector2F(width - 10, height / 2 - BarHeight / 2),
                 size: new PVector2F(BarWidth, BarHeight),
                 speed: BatSpeed);
