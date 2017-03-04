@@ -13,8 +13,15 @@ class Net:
     batch_size = 10
 
     def __init__(self):
+        pass
+
+    def random_weights(self):
         self.init_random_weights()
         self.init_propagate_step()
+
+    def weights_from_file(self, file):
+        saver = tf.train.Saver()
+        saver.restore(self.sess, file)
 
     def init_random_weights(self):
         add_bias_weight = lambda l1, l2: (self.weights.append(tf.Variable(tf.random_normal([l1, l2]))), \
@@ -55,3 +62,7 @@ class Net:
 
     def propagate(self, input):
         return self.sess.run(self.actual_out, feed_dict = {self.input: input})
+
+    def save_to_file(self, name):
+        saver = tf.train.Saver()
+        saver.save(self.sess, name)
