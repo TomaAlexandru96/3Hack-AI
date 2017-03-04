@@ -3,21 +3,24 @@ using System.Runtime.Serialization.Formatters;
 using SFML.Graphics;
 using SFML.Window;
 
+#pragma warning disable 169
+
 namespace Pong {
     public class Bat : ICollideable, IEntity {
+        public Vector2f Velocity;
         private IBatController _controller;
         private Vector2f _position;
         private Vector2f _size;
+        private RectangleShape _shape;
         private Image image;
-        private Vector2f _velocity;
-        private float _speed;
+        private float speed = 1;
         private Game _game;
 
-        public Bat(IBatController controller, Vector2f position, Vector2f size, Texture texture, Game game) {
+        public Bat(IBatController controller, Vector2f position, Vector2f size, Game game) {
             _controller = controller;
             _position = position;
             _size = size;
-            Sprite bat = new Sprite(texture);
+            _shape = new RectangleShape(_size) {FillColor = Color.White};
             _game = game;
         }
 
@@ -30,17 +33,18 @@ namespace Pong {
         }
 
         public void MakeMove() {
-            _position = new Vector2f(_position.X+(_speed*_velocity.X),_position.Y+(_speed*_velocity.Y));
+            _position = new Vector2f(_position.X + (speed * Velocity.X), _position.Y + (speed * Velocity.Y));
         }
 
 
 
         public void Update() {
+            _controller.Update(this);
             MakeMove();
-            if (_position.Y >= _game.height && _velocity.Y > 0) {
+            if (_position.Y >= _game.height && Velocity.Y > 0) {
                 _position = new Vector2f(_position.X,_game.height);
             }
-            else if (_position.Y - _size.Y<= 0 && _velocity.Y < 0) {
+            else if (_position.Y - _size.Y<= 0 && Velocity.Y < 0) {
                 _position = new Vector2f(_position.X,_size.Y);
             }
              _game.GetEntities<Ball>()
@@ -53,8 +57,9 @@ namespace Pong {
 
         }
 
-        public void Render() {
-            throw new System.NotImplementedException();
+        public void Render(RenderTarget target) {
+            _shape.Position = _position;
+            target.Draw(_shape);
         }
 
 

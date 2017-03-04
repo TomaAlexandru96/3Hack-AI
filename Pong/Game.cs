@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SFML.Graphics;
 using SFML.Window;
@@ -9,10 +8,12 @@ namespace Pong {
         public uint width {
             get { return _window.Size.X; }
         }
+
         public uint height {
             get { return _window.Size.Y; }
         }
-        private Window _window;
+
+        private RenderWindow _window;
         private List<IEntity> _entities;
 
         public void Start() {
@@ -24,17 +25,19 @@ namespace Pong {
             Texture playerTexture = new Texture("whitepixel.png");
 
             _entities = new List<IEntity> {
-                new Ball(2),
-                new Bat(new PlayerController(Keyboard.Key.Up, Keyboard.Key.Down), new Vector2i(10, 50),
-                    new Vector2i(4, 20), playerTexture,this),
+                new Ball(new Vector2f(100, 100), 3, this),
+                new Bat(new PlayerController(Keyboard.Key.Up, Keyboard.Key.Down), new Vector2f(10, 50),
+                    new Vector2f(4, 20), this),
                 new Bat(new PlayerController(Keyboard.Key.W, Keyboard.Key.S),
-                    new Vector2i(700, 50),
-                    new Vector2i(4, 20), playerTexture,this)
+                    new Vector2f(700, 50),
+                    new Vector2f(4, 20), this)
             };
 
             while (!closed) {
                 _entities.ForEach(x => x.Update());
-                _entities.ForEach(x => x.Render());
+                _window.Clear();
+                _entities.ForEach(x => x.Render(_window));
+                _window.Display();
             }
         }
 

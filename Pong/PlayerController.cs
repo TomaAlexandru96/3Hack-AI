@@ -12,9 +12,11 @@ namespace Pong {
 
         public void Update(Bat bat) {
             if (Keyboard.IsKeyPressed(_up)) {
-                // TODO: Move bat up
+                bat.Velocity = new Vector2f(0, 1);
             } else if (Keyboard.IsKeyPressed(_down)) {
-                // TODO: Move bat down
+                bat.Velocity = new Vector2f(0, -1);
+            } else {
+                bat.Velocity = new Vector2f(0, 0);
             }
         }
     }
