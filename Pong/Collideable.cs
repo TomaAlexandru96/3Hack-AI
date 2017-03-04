@@ -5,6 +5,5 @@ namespace Pong {
         bool CollidesWith(ICollideable other);
         IntRect GetBoundingBox();
         void MakeMove();
-         void ChangeVelocity();
     }
 }

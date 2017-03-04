@@ -9,8 +9,8 @@ namespace Pong {
         private Vector2f _position;
         private Vector2f _size;
         private Image image;
-        private Vector2f velocity;
-        private float speed;
+        private Vector2f _velocity;
+        private float _speed;
         private Game _game;
 
         public Bat(IBatController controller, Vector2f position, Vector2f size, Texture texture, Game game) {
@@ -30,34 +30,33 @@ namespace Pong {
         }
 
         public void MakeMove() {
-            _position = new Vector2f(_position.X+(speed*velocity.X),_position.Y+(speed*velocity.Y));
+            _position = new Vector2f(_position.X+(_speed*_velocity.X),_position.Y+(_speed*_velocity.Y));
         }
 
 
+
         public void Update() {
-            _game.GetEntities<Ball>()
+            MakeMove();
+            if (_position.Y >= _game.height && _velocity.Y > 0) {
+                _position = new Vector2f(_position.X,_game.height);
+            }
+            else if (_position.Y - _size.Y<= 0 && _velocity.Y < 0) {
+                _position = new Vector2f(_position.X,_size.Y);
+            }
+             _game.GetEntities<Ball>()
                 .ForEach(ball => {
                         if (CollidesWith(ball) && ball.RecentlyCollided != this) {
-                            ball.ChangeVelocity();
+                            ball.ChangeVelocityVerticle();
                         }
                     }
                 );
-            if (_position.Y >= _game.height && velocity.Y > 0) {
-                ChangeVelocity();
-            }
-            else if (_position.Y <= 0 && velocity.Y < 0) {
-                ChangeVelocity();
-            }
-            MakeMove();
+
         }
 
         public void Render() {
             throw new System.NotImplementedException();
         }
 
-        public void ChangeVelocity() {
-            velocity = new Vector2f(-velocity.X, -velocity.Y);
-        }
 
     }
 }

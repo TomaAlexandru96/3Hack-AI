@@ -5,17 +5,17 @@ namespace Pong {
     public class Ball : ICollideable, IEntity {
         private IBatController _controller;
         private Vector2f _position;
-        private Vector2f _size;
-        private Image image;
-        private Vector2f velocity;
-        private float speed;
+        private int _radius;
+        private Image _image;
+        private Vector2f _velocity;
+        private float _speed;
         private Game _game;
         public Bat RecentlyCollided { get; set; }
 
-        public Ball(IBatController controller, Vector2f position, Vector2f size, Texture texture, Game game) {
+        public Ball(IBatController controller, Vector2f position, int radius, Texture texture, Game game) {
             _controller = controller;
             _position = position;
-            _size = size;
+            _radius = radius;
             Sprite bat = new Sprite(texture);
             _game = game;
         }
@@ -25,23 +25,43 @@ namespace Pong {
         }
 
         public IntRect GetBoundingBox() {
-            return new IntRect((int) _position.X, (int) _position.Y, (int) _size.X, (int) _size.Y);
+            return new IntRect((int) _position.X, (int) _position.Y, _radius*2,_radius*2);
         }
 
         public void MakeMove() {
-            throw new System.NotImplementedException();
+            _position = new Vector2f(_position.X+(_speed*_velocity.X),_position.Y+(_speed*_velocity.Y));
         }
 
-        public void ChangeVelocity() {
-            throw new System.NotImplementedException();
+
+
+        public void ChangeVelocityVerticle() {
+            _velocity = new Vector2f(_velocity.X,-_velocity.Y);
+        }
+
+        public void ChangeVelocityHorizon() {
+            _velocity = new Vector2f(-_velocity.X,_velocity.Y);
         }
 
         public void Update() {
-            throw new System.NotImplementedException();
+
+            MakeMove();
+            if (_position.Y + _radius >= _game.height && _velocity.Y > 0) {
+                ChangeVelocityVerticle();
+                _position = new Vector2f(_position.X,_game.height-_radius);
+            }
+            else if (_position.Y - _radius <= 0 && _velocity.Y < 0) {
+                ChangeVelocityVerticle();
+                _position = new Vector2f(_position.X,_game.height+_radius);
+            }
+
         }
 
         public void Render() {
             throw new System.NotImplementedException();
+        }
+
+        public Vector2f GetVelocity() {
+            return _velocity;
         }
 
     }
