@@ -83,6 +83,9 @@
     <Reference Include="sfmlnet-graphics-2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\SFML.Net.2.1.5\lib\sfmlnet-graphics-2.dll</HintPath>
     </Reference>
+    <Reference Include="sfmlnet-system-2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>sfmlnet-system-2.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-window-2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\SFML.Net.2.1.5\lib\sfmlnet-window-2.dll</HintPath>
     </Reference>
@@ -97,6 +100,7 @@
     <Compile Include="IBatController.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="PlayerController.cs" />
+    <Compile Include="PVector2f.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

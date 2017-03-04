@@ -2,7 +2,7 @@
 
 namespace Pong {
     public interface IEntity {
-        void Update();
+        void Update(float delta);
         void Render(RenderTarget target);
     }
 }

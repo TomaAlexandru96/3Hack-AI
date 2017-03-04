@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters;
 using SFML.Graphics;
 using SFML.Window;
@@ -7,21 +9,23 @@ using SFML.Window;
 
 namespace Pong {
     public class Bat : ICollideable, IEntity {
-        public Vector2f Velocity;
+        public PVector2F Velocity = new PVector2F(0, 0);
+        private const double MaxBounceAngle = (5 * Math.PI) / 16;
+        private readonly RectangleShape _shape;
         private IBatController _controller;
-        private Vector2f _position;
-        private Vector2f _size;
-        private RectangleShape _shape;
-        private Image image;
-        private float speed = 1;
+        private PVector2F _position;
+        private PVector2F _size;
+        private float _speed;
         private Game _game;
 
-        public Bat(IBatController controller, Vector2f position, Vector2f size, Game game) {
+        public Bat(Game game, IBatController controller, PVector2F position, PVector2F size, float speed) {
+            _game = game;
             _controller = controller;
             _position = position;
+            Console.WriteLine(position);
             _size = size;
             _shape = new RectangleShape(_size) {FillColor = Color.White};
-            _game = game;
+            _speed = speed;
         }
 
         public bool CollidesWith(ICollideable other) {
@@ -32,36 +36,44 @@ namespace Pong {
             return new IntRect((int) _position.X, (int) _position.Y, (int) _size.X, (int) _size.Y);
         }
 
-        public void MakeMove() {
-            _position = new Vector2f(_position.X + (speed * Velocity.X), _position.Y + (speed * Velocity.Y));
+        public void MakeMove(float delta) {
+            _position = new PVector2F(_position.X + (_speed * Velocity.X * delta),
+                _position.Y + (_speed * Velocity.Y * delta));
         }
 
-
-
-        public void Update() {
+        public void Update(float delta) {
             _controller.Update(this);
-            MakeMove();
-            if (_position.Y >= _game.height && Velocity.Y > 0) {
-                _position = new Vector2f(_position.X,_game.height);
+
+            MakeMove(delta);
+
+            if (_position.Y + _size.Y >= _game.height && Velocity.Y > 0) {
+                _position = new PVector2F(_position.X, _game.height - _size.Y);
+            } else if (_position.Y <= 0 && Velocity.Y < 0) {
+                _position = new PVector2F(_position.X, 0);
             }
-            else if (_position.Y - _size.Y<= 0 && Velocity.Y < 0) {
-                _position = new Vector2f(_position.X,_size.Y);
-            }
-             _game.GetEntities<Ball>()
+
+            _game.GetEntities<Ball>()
                 .ForEach(ball => {
                         if (CollidesWith(ball) && ball.RecentlyCollided != this) {
-                            ball.ChangeVelocityVerticle();
+                            ball.RecentlyCollided = this;
+
+                            var relativeIntersection = (_position.Y + (_size.Y / 2)) - (ball.Position.Y + ball.Radius);
+                            var normalised = relativeIntersection / (_size.Y / 2);
+                            var bounceAngle = normalised * MaxBounceAngle;
+
+                            var right = ball.Velocity.X > 0;
+
+                            ball.Velocity = new PVector2F((float) Math.Cos(bounceAngle),
+                                -(float) Math.Sin(bounceAngle));
+                            if (right) ball.ChangeVelocityHorizontal();
                         }
                     }
                 );
-
         }
 
         public void Render(RenderTarget target) {
             _shape.Position = _position;
             target.Draw(_shape);
         }
-
-
     }
 }

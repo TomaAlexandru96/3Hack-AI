@@ -1,24 +1,25 @@
-﻿using SFML.Graphics;
+﻿using System;
+using SFML.Graphics;
 using SFML.Window;
 
 #pragma warning disable 169
 
 namespace Pong {
     public class Ball : ICollideable, IEntity {
-        private Vector2f _position;
-        private int _radius;
-        private Image _image;
-        private Vector2f _velocity;
-        private float _speed = 1;
-        private Game _game;
-        private readonly CircleShape _shape;
         public Bat RecentlyCollided { get; set; }
+        public PVector2F Position;
+        public PVector2F Velocity = new PVector2F(1, 0);
+        public readonly int Radius;
+        private readonly Game _game;
+        private readonly CircleShape _shape;
+        private readonly float _speed;
 
-        public Ball(Vector2f position, int radius, Game game) {
-            _position = position;
+        public Ball(Game game, PVector2F position, int radius, float speed) {
+            Position = position;
             _shape = new CircleShape(radius) {FillColor = Color.White};
-            _radius = radius;
+            Radius = radius;
             _game = game;
+            _speed = speed;
         }
 
         public bool CollidesWith(ICollideable other) {
@@ -26,34 +27,37 @@ namespace Pong {
         }
 
         public IntRect GetBoundingBox() {
-            return new IntRect((int) _position.X, (int) _position.Y, _radius * 2, _radius * 2);
+            return new IntRect((int) Position.X, (int) Position.Y, Radius * 2, Radius * 2);
         }
 
-        public void MakeMove() {
-            _position = new Vector2f(_position.X + (_speed * _velocity.X), _position.Y + (_speed * _velocity.Y));
+        public void MakeMove(float delta) {
+            var effectiveSpeed = _speed * (1 + Math.Abs(Velocity.Y));
+            Position = new PVector2F(Position.X + (effectiveSpeed * Velocity.X * delta),
+                Position.Y + (effectiveSpeed * Velocity.Y * delta));
         }
 
-        public void ChangeVelocityVerticle() {
-            _velocity = new Vector2f(_velocity.X, -_velocity.Y);
+        public void ChangeVelocityVertical() {
+            Velocity = new PVector2F(Velocity.X, -Velocity.Y);
         }
 
-        public void ChangeVelocityHorizon() {
-            _velocity = new Vector2f(-_velocity.X, _velocity.Y);
+        public void ChangeVelocityHorizontal() {
+            Velocity = new PVector2F(-Velocity.X, Velocity.Y);
         }
 
-        public void Update() {
-            MakeMove();
-            if (_position.Y + _radius >= _game.height && _velocity.Y > 0) {
-                ChangeVelocityVerticle();
-                _position = new Vector2f(_position.X, _game.height - _radius);
-            } else if (_position.Y - _radius <= 0 && _velocity.Y < 0) {
-                ChangeVelocityVerticle();
-                _position = new Vector2f(_position.X, _game.height + _radius);
+        public void Update(float delta) {
+            MakeMove(delta);
+
+            if (Position.Y + Radius >= _game.height && Velocity.Y > 0) {
+                ChangeVelocityVertical();
+                Position = new PVector2F(Position.X, _game.height - Radius);
+            } else if (Position.Y - Radius <= 0 && Velocity.Y < 0) {
+                ChangeVelocityVertical();
+                Position = new PVector2F(Position.X, Radius);
             }
         }
 
         public void Render(RenderTarget target) {
-            _shape.Position = _position;
+            _shape.Position = Position;
             target.Draw(_shape);
         }
     }

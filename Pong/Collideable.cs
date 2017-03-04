@@ -4,6 +4,6 @@ namespace Pong {
     public interface ICollideable {
         bool CollidesWith(ICollideable other);
         IntRect GetBoundingBox();
-        void MakeMove();
+        void MakeMove(float delta);
     }
 }
