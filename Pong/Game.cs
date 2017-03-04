@@ -41,11 +41,13 @@ namespace Pong {
         private readonly Text _playerOneText = new Text();
         private readonly Text _playerTwoText = new Text();
         private readonly Clock _deltaClock;
+        private readonly TcpTrainer _trainerClient;
         private int _playerOneScore;
         private int _playerTwoScore;
 
         public Game() {
             _deltaClock = new Clock();
+            _trainerClient = new TcpTrainer(this);
         }
 
         public void Start() {
@@ -84,6 +86,8 @@ namespace Pong {
 
                 float delta = _deltaClock.Restart().AsSeconds();
                 _entities.ForEach(x => x.Update(delta));
+
+                _trainerClient.Update();
 
                 _window.Clear();
                 _entities.ForEach(x => x.Render(_window));

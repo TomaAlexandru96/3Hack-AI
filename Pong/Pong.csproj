@@ -101,6 +101,7 @@
     <Compile Include="IEntity.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="PVector2f.cs" />
+    <Compile Include="TCPTrainer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
