@@ -1,4 +1,6 @@
-﻿namespace Pong {
+﻿using SFML.Graphics;
+
+namespace Pong {
     public class Ball : ICollideable, IEntity {
         private int _size;
 
@@ -7,6 +9,10 @@
         }
 
         public bool CollidesWith(ICollideable other) {
+            throw new System.NotImplementedException();
+        }
+
+        public IntRect GetBoundingBox() {
             throw new System.NotImplementedException();
         }
 
