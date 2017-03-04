@@ -6,6 +6,12 @@ using SFML.Window;
 
 namespace Pong {
     public class Game {
+        public uint width {
+            get { return _window.Size.X; }
+        }
+        public uint height {
+            get { return _window.Size.Y; }
+        }
         private Window _window;
         private List<IEntity> _entities;
 
@@ -20,10 +26,10 @@ namespace Pong {
             _entities = new List<IEntity> {
                 new Ball(2),
                 new Bat(new PlayerController(Keyboard.Key.Up, Keyboard.Key.Down), new Vector2i(10, 50),
-                    new Vector2i(4, 20), playerTexture),
+                    new Vector2i(4, 20), playerTexture,this),
                 new Bat(new PlayerController(Keyboard.Key.W, Keyboard.Key.S),
                     new Vector2i(700, 50),
-                    new Vector2i(4, 20), playerTexture)
+                    new Vector2i(4, 20), playerTexture,this)
             };
 
             while (!closed) {
