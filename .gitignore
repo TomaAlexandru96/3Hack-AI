@@ -1,3 +1,4 @@
 .idea
 Pong/.idea
-Pong/obj
+Pong/obj/
+Pong/bin/
