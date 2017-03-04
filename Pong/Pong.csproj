@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="arial.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="csfml-audio-2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -99,7 +102,10 @@
     <Compile Include="Game.cs" />
     <Compile Include="IBatController.cs" />
     <Compile Include="IEntity.cs" />
+    <Compile Include="IState.cs" />
+    <Compile Include="MenuState.cs" />
     <Compile Include="PlayerController.cs" />
+    <Compile Include="PlayState.cs" />
     <Compile Include="PVector2f.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

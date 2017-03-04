@@ -12,7 +12,7 @@ namespace Pong {
         public readonly int Radius;
         private readonly Game _game;
         private readonly CircleShape _shape;
-        private readonly float _speed;
+        private  float _speed;
 
         public Ball(Game game, PVector2F position, int radius, float speed) {
             Position = position;
@@ -46,7 +46,20 @@ namespace Pong {
 
         public void Update(float delta) {
             MakeMove(delta);
-
+            if (Position.X - Radius < 0) {
+                _game.PlayerTwoScore++;
+                Position = new PVector2F((float) _game.width / 2 - 1.5f, (float) _game.height / 2 - ((float) Radius / 2));
+                Velocity = new PVector2F(1,0);
+                _speed = 160;
+                RecentlyCollided = null;
+            }
+            if (Position.X + Radius> _game.width) {
+                _game.PlayerOneScore++;
+                Position = new PVector2F((float) _game.width / 2 - 1.5f, (float) _game.height / 2 - ((float) Radius / 2));
+                Velocity = new PVector2F(-1,0);
+                _speed = 160;
+                RecentlyCollided = null;
+            }
             if (Position.Y + Radius >= _game.height && Velocity.Y > 0) {
                 ChangeVelocityVertical();
                 Position = new PVector2F(Position.X, _game.height - Radius);
