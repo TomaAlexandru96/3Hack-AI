@@ -8,7 +8,7 @@ class Net:
     biases = []
     hidden_layers_nr = 2
     neurons_per_layer = 30
-    nr_of_inputs = 6
+    nr_of_inputs = 7
     nr_of_outputs = 3
     batch_size = 10
 
