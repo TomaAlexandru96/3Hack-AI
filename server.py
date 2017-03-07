@@ -3,6 +3,7 @@
 import socket
 
 from neural_net import Net
+from random import shuffle
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 43437
@@ -30,8 +31,7 @@ elif data == play:
   mode = play
 
 while 1:
-    data = conn.recv(BUFFER_SIZE)
-    data = data.decode("utf-8")
+    data = conn.recv(BUFFER_SIZE).decode("utf-8")
 
     if mode == train:
         if queue == None:
@@ -44,7 +44,9 @@ while 1:
         if queue.strip()[-3:] == end:
             queue = queue.strip()[:-3]
             n.start_session()
-            #n.train(queue.split(",")[:-1])
+            listsz = queue.split(",")[:-1]
+            shuffle(listsz)
+            n.train(listsz)
             n.save_to_file("models/neural")
             queue = None
             mode = None
@@ -58,21 +60,24 @@ while 1:
           n.weights_from_file("models/neural")
 
         queue += data
-        print("Got queue data")
 
         if len(queue.split(",")) > 1:
           parsed = queue.split(",")[-2]
           queue = queue.split(",")[-1]
 
+          print([float(x) for x in parsed.split(" ")])
+
           result = n.propagate([[float(x) for x in parsed.split(" ")]])
           result = result[0]
-          print(result[0], " ", result[1], " ", result[2])
-          if (result[0] > result[1] and result[0] > result[2]):
-            print("GO UP")
+
+          print(result[0], result[1], result[2])
+
+          if result[0] > result[1] and result[0] > result[2]:
+            print("Go up")
           elif result[1] > result[2]:
-            print("GO DOWN")
+            print("Go down")
           else:
-            print("STAY IN SAME PLACE")
+            print("Remain same")
 
           conn.send("{} {} {}".format(result[0], result[1], result[2]).encode("utf-8"))
           

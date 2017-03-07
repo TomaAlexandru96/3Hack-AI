@@ -18,6 +18,7 @@ namespace Pong {
         private PVector2F _velocity = new PVector2F(0, 0);
 
         public AiController(Game game) {
+            Console.WriteLine("AI CONTROLLER");
             _game = game;
 
             _client = new TcpClient();
@@ -27,6 +28,7 @@ namespace Pong {
             _clientWriter = new StreamWriter(networkStream);
             _clientReader = new StreamReader(networkStream);
             _clientWriter.Write("PLAY");
+            _clientWriter.Flush();
 
             _readThread = new Thread(Start);
             _readThread.Start();
@@ -40,19 +42,23 @@ namespace Pong {
                     float[] values = new float[3];
                     int i = 0;
                     foreach (var val in buffer.Split(' ')) {
-                        Console.WriteLine(val);
                         values[i] = float.Parse(val.Substring(0, 10));
                         if (++i == 3) break;
                     }
 
+                    Console.WriteLine($"{values[0]}, {values[1]}, {values[2]}");
+
                     buffer = buffer.Split(' ').ToList().Skip(3).Aggregate((acc, s) => acc + " " + s).TrimStart();
 
                     if (values[0] > values[1] && values[0] > values[2]) {
-                        _velocity = new PVector2F(0, 1);
-                    } else if (values[1] > values[2]) {
                         _velocity = new PVector2F(0, -1);
+                        Console.WriteLine("UP");
+                    } else if (values[1] > values[2]) {
+                        _velocity = new PVector2F(0, 1);
+                        Console.WriteLine("DOWN");
                     } else {
                         _velocity = new PVector2F(0, 0);
+                        Console.WriteLine("NOMOVE");
                     }
                 }
             }
@@ -72,6 +78,7 @@ namespace Pong {
                 ball.EffectiveSpeed,
                 playerOne.Position.Y,
                 playerTwo.Position.Y);
+            _clientWriter.Flush();
 
             bat.Velocity = _velocity;
         }
