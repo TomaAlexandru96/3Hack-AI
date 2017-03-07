@@ -69,3 +69,11 @@ class Net:
     def save_to_file(self, name):
         saver = tf.train.Saver()
         saver.save(self.sess, name)
+
+    def print_net(self):
+        for w in self.weights:
+            print(self.sess.run(w))
+            print()
+        for b in self.biases:
+            print(self.sess.run(b))
+            print()
